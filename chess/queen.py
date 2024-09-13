@@ -2,6 +2,7 @@ from chess.bishop import Bishop
 from chess.rook import Rook
 from piece import Piece
 
+
 class Queen(Piece):
     def get_moves_set(self, x: int, y: int) -> list[tuple[int, int]]:
         moves = []
@@ -10,3 +11,6 @@ class Queen(Piece):
         moves.extend(bishop)
         moves.extend(rook)
         return moves
+
+    def __str__(self):
+        return "Quee"
