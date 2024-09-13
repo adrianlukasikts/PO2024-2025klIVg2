@@ -2,4 +2,11 @@ from piece import Piece
 
 class Knight(Piece):
     def get_moves_set(self, x: int, y: int) -> list[tuple[int, int]]:
-        pass
+        return [(x+2, y-1),
+                (x+2, y+1),
+                (x-2, y-1),
+                (x-2, y+1),
+                (x+1, y+2),
+                (x-1, y+2),
+                (x+1, y-2),
+                (x-1, y-2)]
