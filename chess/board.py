@@ -31,6 +31,15 @@ class Board:
         for i in range(8):
             print(chr(ord("A") + i), end="    ")
 
+    def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
+        if self.grid[x1][y1].piece is None:
+            return False
+        if self.grid[x2][y2].piece is not None:
+            return False
+        moves = self.grid[x1][y1].piece.get_moves_set(x1, y1)
+        if not (x2, y2) in moves:
+            return False
+        # Todo
 
 board = Board()
 board.print_board()

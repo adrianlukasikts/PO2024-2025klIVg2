@@ -14,3 +14,7 @@ class Knight(Piece):
 
     def __str__(self):
         return "Knig"
+
+    def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
+        return []
+
