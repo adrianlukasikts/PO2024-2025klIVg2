@@ -22,11 +22,14 @@ class Board:
         ]
 
     def print_board(self):
-        for index, row in enumerate(self.grid):
-            print(index, end=" ")
+        for index, row in enumerate(self.grid[::-1]):
+            print(8 - index, end=" ")
             for field in row:
                 print(field.get_piece_name(), end=" ")
             print()
+        print(" ", end=" ")
+        for i in range(8):
+            print(chr(ord("A") + i), end="    ")
 
 
 board = Board()
