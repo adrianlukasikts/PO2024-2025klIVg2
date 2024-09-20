@@ -10,16 +10,9 @@ from chess.rook import Rook
 class Board:
     def __init__(self):
         #Todo odwrocona szachownica o 90 stopni
+        pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
         self.grid = [
-            [Field(Rook()), Field(Knight()), Field(Bishop()), Field(Queen()), Field(King()), Field(Bishop()),
-             Field(Knight()), Field(Rook())],
-            [Field(Pawn()) for _ in range(8)],
-            [Field() for _ in range(8)],
-            [Field() for _ in range(8)],
-            [Field() for _ in range(8)],
-            [Field() for _ in range(8)],
-            [Field() for _ in range(8)],
-            [Field() for _ in range(8)],
+            *[[Field(piece), Field(Pawn()), *[Field() for _ in range(6)]] for piece in pieces]
         ]
 
     def print_board(self):
