@@ -9,6 +9,7 @@ from chess.rook import Rook
 
 class Board:
     def __init__(self):
+        #Todo odwrocona szachownica o 90 stopni
         self.grid = [
             [Field(Rook()), Field(Knight()), Field(Bishop()), Field(Queen()), Field(King()), Field(Bishop()),
              Field(Knight()), Field(Rook())],
@@ -39,7 +40,15 @@ class Board:
         moves = self.grid[x1][y1].piece.get_moves_set(x1, y1)
         if not (x2, y2) in moves:
             return False
-        # Todo
+        moves_between = self.grid[x1][y1].piece.get_moves_between(x1, y1, x2, y2)
+        for i, j in moves_between:
+            if self.grid[i][j].piece is not None:
+                return False
+        return True
 
 board = Board()
 board.print_board()
+
+print(board.is_valid_move(1,1,1,2))
+print(board.is_valid_move(5,0,3,2))
+print(board.is_valid_move(5,0,5,7))
