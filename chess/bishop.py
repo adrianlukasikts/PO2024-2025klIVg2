@@ -16,3 +16,9 @@ class Bishop(Piece):
 
     def __str__(self):
         return "Bish"
+
+    def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
+        step_y = 1 if y1 < y2 else -1
+        step_x = 1 if x1 < x2 else -1
+        return [(i,j) for i, j in zip(range(x1 + step_x, x2, step_x), range(y1 + step_y, y2, step_y))]
+

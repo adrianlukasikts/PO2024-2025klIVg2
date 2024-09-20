@@ -13,3 +13,10 @@ class Pawn(Piece):
 
     def __str__(self):
         return "Pawn"
+
+    def get_moves_between(self, x1:int, y1:int, x2:int, y2:int) ->list[tuple[int, int]]:
+        if abs(y1 - y2) == 2:
+            step = 1 if y2 > y1 else -1
+            return [(x1,y1+step)]
+        else:
+            return []
