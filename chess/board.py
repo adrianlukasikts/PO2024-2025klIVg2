@@ -6,20 +6,28 @@ from chess.pawn import Pawn
 from chess.queen import Queen
 from chess.rook import Rook
 
+
 class InvalidMoveException(Exception):
     pass
 
+
 class Board:
     def __init__(self):
-        #Todo odwrocona szachownica o 90 stopni
-        pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
+        white_pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
+        black_pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
         self.grid = [
-            *[[Field(piece), Field(Pawn()), *[Field() for _ in range(6)]] for piece in pieces]
+            [
+                Field(white_piece),
+                Field(Pawn()),
+                *[Field() for _ in range(4)],
+                Field(Pawn()),
+                Field(black_piece)
+            ] for white_piece, black_piece in zip(white_pieces, black_pieces)
         ]
 
     def print_board(self):
         for row in range(7, -1, -1):
-            print(row+1 , end=" ")
+            print(row + 1, end=" ")
 
             for column in range(8):
                 print(self.grid[column][row].get_piece_name(), end=" ")
@@ -28,18 +36,6 @@ class Board:
         for i in range(8):
             print(chr(ord("A") + i), end="    ")
         print()
-
-
-        # for index, row in enumerate(self.grid[::-1]):
-        #     print(8 - index, end=" ")
-        #     for field in row:
-        #         print(field.get_piece_name(), end=" ")
-        #     print()
-        # print(" ", end=" ")
-        # for i in range(8):
-        #     print(chr(ord("A") + i), end="    ")
-        # print()
-
     def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
         if self.grid[x1][y1].piece is None:
             return False
@@ -61,20 +57,16 @@ class Board:
         else:
             raise InvalidMoveException()
 
+
 board = Board()
 board.print_board()
 
-assert board.is_valid_move(1,1,1,2)
-assert not board.is_valid_move(5,0,3,2)
-assert not board.is_valid_move(5,0,5,7)
+assert board.is_valid_move(1, 1, 1, 2)
+assert not board.is_valid_move(5, 0, 3, 2)
+assert not board.is_valid_move(5, 0, 5, 7)
 
 try:
-    board.make_move(1,1,1,2)
+    board.make_move(1, 1, 1, 2)
     board.print_board()
 except InvalidMoveException:
     print("nuh uh")
-
-
-# print(board.is_valid_move(1,1,1,2))
-# print(board.is_valid_move(5,0,3,2))
-# print(board.is_valid_move(5,0,5,7))
