@@ -16,14 +16,27 @@ class Board:
         ]
 
     def print_board(self):
-        for index, row in enumerate(self.grid[::-1]):
-            print(8 - index, end=" ")
-            for field in row:
-                print(field.get_piece_name(), end=" ")
+        for row in range(7, -1, -1):
+            print(row+1 , end=" ")
+
+            for column in range(8):
+                print(self.grid[column][row].get_piece_name(), end=" ")
             print()
-        print(" ", end=" ")
+        print("  ", end=" ")
         for i in range(8):
             print(chr(ord("A") + i), end="    ")
+        print()
+
+
+        # for index, row in enumerate(self.grid[::-1]):
+        #     print(8 - index, end=" ")
+        #     for field in row:
+        #         print(field.get_piece_name(), end=" ")
+        #     print()
+        # print(" ", end=" ")
+        # for i in range(8):
+        #     print(chr(ord("A") + i), end="    ")
+        # print()
 
     def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
         if self.grid[x1][y1].piece is None:
@@ -38,6 +51,7 @@ class Board:
             if self.grid[i][j].piece is not None:
                 return False
         return True
+
 
 board = Board()
 board.print_board()
