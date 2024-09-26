@@ -6,6 +6,8 @@ from chess.pawn import Pawn
 from chess.queen import Queen
 from chess.rook import Rook
 
+class InvalidMoveException(Exception):
+    pass
 
 class Board:
     def __init__(self):
@@ -52,10 +54,27 @@ class Board:
                 return False
         return True
 
+    def make_move(self, x1: int, y1: int, x2: int, y2: int):
+        if self.is_valid_move(x1, y1, x2, y2):
+            self.grid[x2][y2].piece = self.grid[x1][y1].piece
+            self.grid[x1][y1].piece = None
+        else:
+            raise InvalidMoveException()
 
 board = Board()
 board.print_board()
 
-print(board.is_valid_move(1,1,1,2))
-print(board.is_valid_move(5,0,3,2))
-print(board.is_valid_move(5,0,5,7))
+assert board.is_valid_move(1,1,1,2)
+assert not board.is_valid_move(5,0,3,2)
+assert not board.is_valid_move(5,0,5,7)
+
+try:
+    board.make_move(1,1,1,2)
+    board.print_board()
+except InvalidMoveException:
+    print("nuh uh")
+
+
+# print(board.is_valid_move(1,1,1,2))
+# print(board.is_valid_move(5,0,3,2))
+# print(board.is_valid_move(5,0,5,7))
