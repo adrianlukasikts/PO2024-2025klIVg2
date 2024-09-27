@@ -8,9 +8,9 @@ class Pawn(Piece):
         self.moved = False
 
     def get_moves_set(self, x: int, y: int) -> list[tuple[int, int]]:
-        moves = [(x, y + 1), (x - 1, y + 1), (x + 1, y + 1)]
+        moves = [(x, y + self.color.value), (x - 1, y + self.color.value), (x + 1, y + self.color.value)]
         if not self.moved:
-            moves.append((x, y + 2))
+            moves.append((x, y + self.color.value * 2))
         return moves
 
     def __str__(self):

@@ -68,6 +68,7 @@ assert not board.is_valid_move(5, 0, 5, 7)
 
 try:
     board.make_move(1, 1, 1, 2)
+    board.make_move(0, 6, 0, 5)
     board.print_board()
 except InvalidMoveException:
     print("nuh uh")
