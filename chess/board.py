@@ -1,4 +1,5 @@
 from chess.bishop import Bishop
+from chess.colors import Color
 from chess.field import Field
 from chess.king import King
 from chess.knight import Knight
@@ -14,13 +15,13 @@ class InvalidMoveException(Exception):
 class Board:
     def __init__(self):
         white_pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        black_pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
+        black_pieces = [Rook(Color.BLACK), Knight(Color.BLACK), Bishop(Color.BLACK), Queen(Color.BLACK), King(Color.BLACK), Bishop(Color.BLACK), Knight(Color.BLACK), Rook(Color.BLACK)]
         self.grid = [
             [
                 Field(white_piece),
                 Field(Pawn()),
                 *[Field() for _ in range(4)],
-                Field(Pawn()),
+                Field(Pawn(Color.BLACK)),
                 Field(black_piece)
             ] for white_piece, black_piece in zip(white_pieces, black_pieces)
         ]

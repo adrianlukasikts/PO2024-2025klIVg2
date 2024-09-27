@@ -15,7 +15,7 @@ class Bishop(Piece):
         return moves
 
     def __str__(self):
-        return "Bish"
+        return self.get_piece_color("Bish")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         step_y = 1 if y1 < y2 else -1

@@ -13,7 +13,7 @@ class Queen(Piece):
         return moves
 
     def __str__(self):
-        return "Quee"
+        return self.get_piece_color("Quee")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         if x1 == x2 or y1 == y2:

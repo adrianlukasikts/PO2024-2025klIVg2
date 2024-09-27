@@ -7,7 +7,7 @@ class King(Piece):
                 (x - 1, y)]
 
     def __str__(self):
-        return "King"
+        return self.get_piece_color("King")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         return []
