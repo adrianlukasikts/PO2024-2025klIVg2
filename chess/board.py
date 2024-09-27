@@ -25,6 +25,7 @@ class Board:
                 Field(black_piece)
             ] for white_piece, black_piece in zip(white_pieces, black_pieces)
         ]
+        self.color_current_player = Color.WHITE
 
     def print_board(self):
         for row in range(7, -1, -1):
@@ -40,7 +41,9 @@ class Board:
     def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
         our_piece = self.grid[x1][y1].piece
         move_destination = self.grid[x2][y2]
-        if our_piece is None:
+        if not our_piece:
+            return False
+        if self.color_current_player != our_piece.color:
             return False
         if move_destination.piece and move_destination.piece.color == our_piece.color:
             return False
@@ -57,6 +60,7 @@ class Board:
         if self.is_valid_move(x1, y1, x2, y2):
             self.grid[x2][y2].piece = self.grid[x1][y1].piece
             self.grid[x1][y1].piece = None
+            self.color_current_player = Color(self.color_current_player.value * -1)
         else:
             raise InvalidMoveException()
 
@@ -64,20 +68,22 @@ class Board:
 board = Board()
 board.print_board()
 
-assert board.is_valid_move(1, 1, 1, 2)
-assert not board.is_valid_move(5, 0, 3, 2)
-assert not board.is_valid_move(5, 0, 5, 7)
 
 try:
-    board.make_move(1, 1, 1, 2)
+    # board.make_move(1, 1, 1, 2)
+    # board.print_board()
+    # board.make_move(0, 6, 0, 5)
+    # board.print_board()
+    # board.make_move(1,2,1,3)
+    # board.print_board()
+    # board.make_move(1,3,1,4)
+    # board.print_board()
+    # board.make_move(1,4, 0, 5)
+    board.make_move(4,1,4,3)
     board.print_board()
-    board.make_move(0, 6, 0, 5)
+    board.make_move(3,6,3,4)
     board.print_board()
-    board.make_move(1,2,1,3)
-    board.print_board()
-    board.make_move(1,3,1,4)
-    board.print_board()
-    board.make_move(1,4, 0, 5)
+    board.make_move(4,3,3,4)
     board.print_board()
 except InvalidMoveException:
     print("nuh uh")
