@@ -64,6 +64,12 @@ class Board:
         else:
             raise InvalidMoveException()
 
+    def get_pos_from_notation(self, notation:str):
+        letter = notation[0] # FIXME
+        y = int(notation[1])
+        x = ord(letter) - ord("A")
+        return x, y
+
 
 board = Board()
 board.print_board()
@@ -79,7 +85,7 @@ try:
     # board.make_move(1,3,1,4)
     # board.print_board()
     # board.make_move(1,4, 0, 5)
-    board.make_move(4,1,4,3)
+    board.make_move(*board.get_pos_from_notation("E2"),*board.get_pos_from_notation("E4"))
     board.print_board()
     board.make_move(3,6,3,4)
     board.print_board()
