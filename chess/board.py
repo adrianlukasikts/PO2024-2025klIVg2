@@ -38,14 +38,16 @@ class Board:
             print(chr(ord("A") + i), end="    ")
         print()
     def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
-        if self.grid[x1][y1].piece is None:
+        our_piece = self.grid[x1][y1].piece
+        move_destination = self.grid[x2][y2]
+        if our_piece is None:
             return False
-        if self.grid[x2][y2].piece is not None:
+        if move_destination.piece and move_destination.piece.color == our_piece.color:
             return False
-        moves = self.grid[x1][y1].piece.get_moves_set(x1, y1)
+        moves = our_piece.get_moves_set(x1, y1)
         if not (x2, y2) in moves:
             return False
-        moves_between = self.grid[x1][y1].piece.get_moves_between(x1, y1, x2, y2)
+        moves_between = our_piece.get_moves_between(x1, y1, x2, y2)
         for i, j in moves_between:
             if self.grid[i][j].piece is not None:
                 return False
@@ -68,7 +70,14 @@ assert not board.is_valid_move(5, 0, 5, 7)
 
 try:
     board.make_move(1, 1, 1, 2)
+    board.print_board()
     board.make_move(0, 6, 0, 5)
+    board.print_board()
+    board.make_move(1,2,1,3)
+    board.print_board()
+    board.make_move(1,3,1,4)
+    board.print_board()
+    board.make_move(1,4, 0, 5)
     board.print_board()
 except InvalidMoveException:
     print("nuh uh")
