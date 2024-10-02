@@ -101,7 +101,9 @@ try:
         board.print_board()
         position = input("Podaj nastepny ruch: ")
         position_split = position.split(" ")
-        print(position_split)
+        movement = board.get_pos_from_notation(position_split[0])
+        movement_two = board.get_pos_from_notation(position_split[1])
+        board.make_move(*movement, *movement_two)
 except InvalidMoveException:
 
     print(f"Niepoprawny ruch nr: {board.move_counter}" )
