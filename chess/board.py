@@ -15,7 +15,8 @@ class InvalidMoveException(Exception):
 class Board:
     def __init__(self):
         white_pieces = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        black_pieces = [Rook(Color.BLACK), Knight(Color.BLACK), Bishop(Color.BLACK), Queen(Color.BLACK), King(Color.BLACK), Bishop(Color.BLACK), Knight(Color.BLACK), Rook(Color.BLACK)]
+        black_pieces = [Rook(Color.BLACK), Knight(Color.BLACK), Bishop(Color.BLACK), Queen(Color.BLACK),
+                        King(Color.BLACK), Bishop(Color.BLACK), Knight(Color.BLACK), Rook(Color.BLACK)]
         self.grid = [
             [
                 Field(white_piece),
@@ -40,6 +41,8 @@ class Board:
         for i in range(8):
             print(chr(ord("A") + i), end="    ")
         print()
+        print("teraz rusza sie " + str(self.color_current_player))
+
     def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
         our_piece = self.grid[x1][y1].piece
         move_destination = self.grid[x2][y2]
@@ -60,6 +63,9 @@ class Board:
 
     def make_move(self, x1: int, y1: int, x2: int, y2: int):
         if self.is_valid_move(x1, y1, x2, y2):
+            if isinstance(self.grid[x2][y2].piece, King):
+                self.game_is_finished = True
+                print("Wygrana gracza " + str(self.grid[x2][y2].piece.color))
             self.grid[x2][y2].piece = self.grid[x1][y1].piece
             self.grid[x1][y1].piece = None
             self.color_current_player = Color(self.color_current_player.value * -1)
@@ -67,43 +73,41 @@ class Board:
         else:
             raise InvalidMoveException()
 
-    def get_pos_from_notation(self, notation:str):
-        letter = notation[0] # FIXME
+    def get_pos_from_notation(self, notation: str):
+        letter = notation[0]  # FIXME
         y = int(notation[1]) - 1
         x = ord(letter) - ord("A")
         return x, y
 
 
-
 board = Board()
 board.print_board()
 
+# board.make_move(1, 1, 1, 2)
+# board.print_board()
+# board.make_move(0, 6, 0, 5)
+# board.print_board()
+# board.make_move(1,2,1,3)
+# board.print_board()
+# board.make_move(1,3,1,4)
+# board.print_board()
+# board.make_move(1,4, 0, 5)
+# board.make_move(*board.get_pos_from_notation("E2"),*board.get_pos_from_notation("E4"))
+# board.print_board()
+# board.make_move(3,6,3,4)
+# board.print_board()
+# board.make_move(4,3,3,4)
+# board.print_board()
 
+while not board.game_is_finished:
 
-try:
-    # board.make_move(1, 1, 1, 2)
-    # board.print_board()
-    # board.make_move(0, 6, 0, 5)
-    # board.print_board()
-    # board.make_move(1,2,1,3)
-    # board.print_board()
-    # board.make_move(1,3,1,4)
-    # board.print_board()
-    # board.make_move(1,4, 0, 5)
-    # board.make_move(*board.get_pos_from_notation("E2"),*board.get_pos_from_notation("E4"))
-    # board.print_board()
-    # board.make_move(3,6,3,4)
-    # board.print_board()
-    # board.make_move(4,3,3,4)
-    # board.print_board()
-
-    while not board.game_is_finished:
-        board.print_board()
-        position = input("Podaj nastepny ruch: ")
-        position_split = position.split(" ")
-        movement = board.get_pos_from_notation(position_split[0])
-        movement_two = board.get_pos_from_notation(position_split[1])
+    board.print_board()
+    position = input("Podaj nastepny ruch: ")
+    position_split = position.split(" ")
+    movement = board.get_pos_from_notation(position_split[0])
+    movement_two = board.get_pos_from_notation(position_split[1])
+    try:
         board.make_move(*movement, *movement_two)
-except InvalidMoveException:
+    except InvalidMoveException:
+        print("Ten ruch jest nielegalny")
 
-    print(f"Niepoprawny ruch nr: {board.move_counter}" )
