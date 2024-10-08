@@ -71,6 +71,17 @@ class Library:
         except UserDoesNotExistException:
             print("User not exists")
 
+    def return_book(self, book_id:int):
+        for user_id, book_ids in self.rented_books.items():
+            if book_id in book_ids:
+                book_ids.remove(book_id)
+                if not book_ids:
+                    self.rented_books.pop(user_id)
+                return
+            # TODO raise exception
+
+
+
 
 
 
