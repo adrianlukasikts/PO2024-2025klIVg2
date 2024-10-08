@@ -35,9 +35,9 @@ class Library:
 
 
 library = Library()
-book_one = Book(0, "Hobbit", "Tolkien", 2222, "przygoda")
-book_two = Book(1, "Władca pierścieni", "Tolkien", 2222, "przygoda")
-book_three = Book(2, "Lord of the rings", "Tolkien", 2222, "przygoda")
+book_one = Book("Hobbit", "Tolkien", 2222, "przygoda")
+book_two = Book("Władca pierścieni", "Tolkien", 2222, "przygoda")
+book_three = Book("Lord of the rings", "Tolkien", 2222, "przygoda")
 library.add_book(book_one)
 library.add_book(book_two)
 library.add_book(book_three)
