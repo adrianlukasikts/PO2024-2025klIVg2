@@ -1,6 +1,7 @@
 from functools import reduce
 
 from book import Book
+from library.rented_book import RentedBook
 from user import User
 
 
@@ -33,7 +34,7 @@ class GenreDoesNotExist(Exception):
 class Library:
     def __init__(self):
         self.books: dict[str, list[Book]] = {}
-        self.rented_books: dict[int, list[int]] = {}
+        self.rented_books: dict[int, list[RentedBook]] = {}
         self.users: list[User] = []
 
     def add_book(self, book: Book):
@@ -61,7 +62,7 @@ class Library:
             raise BookDoesNotExistException()
         if user_id not in map(lambda user: user.id, self.users):
             raise UserDoesNotExistException()
-        for value in self.rented_books.values():
+        for value in map(lambda rented_book: rented_book.book_id, self.rented_books.values()):
             if book.id in value:
                 raise BookAlreadyRentedException()
 
@@ -71,9 +72,9 @@ class Library:
         try:
             if self.can_book_be_rented(book, user_id):
                 if user_id not in self.rented_books:
-                    self.rented_books[user_id] = [book.id]
+                    self.rented_books[user_id] = [RentedBook(book.id)]
                 else:
-                    self.rented_books[user_id].append(book.id)
+                    self.rented_books[user_id].append(RentedBook(book.id))
         except BookDoesNotExistException:
             print("Book not exists")
         except BookAlreadyRentedException:
@@ -82,10 +83,11 @@ class Library:
             print("User not exists")
 
     def return_book(self, book_id: int):
-        for user_id, book_ids in self.rented_books.items():
-            if book_id in book_ids:
-                book_ids.remove(book_id)
-                if not book_ids:
+        for user_id, rented_books in self.rented_books.items():
+            if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
+                rented_books = filter(lambda rented_book: rented_book.book_id != book_id, rented_books)
+                # fixme czy mozna prosciej?? ^^
+                if not rented_books:
                     self.rented_books.pop(user_id)
                 return
         raise BookIsNotRentedException()
@@ -152,7 +154,7 @@ except GenreDoesNotExist:
     print("Gatunek nie występuje")
 
 try:
-    library.print_gen_by_autor("NieTolkien1")
+    library.print_gen_by_autor("NieTolkien")
 except GenreDoesNotExist:
     print("Gatunek nie wystepuje")
 # library.print_title_by_gen("Akcja")
