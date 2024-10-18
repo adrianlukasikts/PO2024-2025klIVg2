@@ -167,7 +167,7 @@ library.return_book(book_one.id)
 library.rent_book(book_one, 0)
 # print(library.rented_books)
 library.rent_book(book_two, 0)
-# print(library.rented_books)
+print(library.rented_books)
 
 library.return_book(book_one.id)
 library.return_book(book_two.id)
