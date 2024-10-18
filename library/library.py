@@ -1,6 +1,7 @@
 from functools import reduce
 
 from book import Book
+from rent_history import RentHistory
 from rented_book import RentedBook
 from user import User
 
@@ -38,6 +39,7 @@ class Library:
         self.books: dict[str, list[Book]] = {}
         self.rented_books: dict[int, list[RentedBook]] = {}
         self.users: list[User] = []
+        self.rented_history: dict[int, list[RentHistory]] = {}
 
     def add_book(self, book: Book):
         if not self.books.get(book.title):
