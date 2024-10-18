@@ -90,6 +90,11 @@ class Library:
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
+                rented_one_book: RentedBook = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))[0]
+                if self.rented_history.get(book_id):
+                    self.rented_history[book_id].append(RentHistory(user_id, rented_one_book.rental_date))
+                else:
+                    self.rented_history[book_id] = [RentHistory(user_id, rented_one_book.rental_date)]
                 rented_books = list(filter(lambda rented_book: rented_book.book_id != book_id, rented_books))
                 if not rented_books:
                     self.rented_books.pop(user_id)
