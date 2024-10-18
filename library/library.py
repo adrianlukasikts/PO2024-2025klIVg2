@@ -28,8 +28,10 @@ class BookAlreadyRentedException(Exception):
 class BookIsNotRentedException(Exception):
     pass
 
+
 class GenreDoesNotExist(Exception):
     pass
+
 
 class Library:
     def __init__(self):
@@ -62,8 +64,9 @@ class Library:
             raise BookDoesNotExistException()
         if user_id not in map(lambda user: user.id, self.users):
             raise UserDoesNotExistException()
-        for value in map(lambda rented_book: rented_book.book_id, self.rented_books.values()):
-            if book.id in value:
+        if self.rented_books.values():
+            books_rented = list(reduce(list.__add__, self.rented_books.values()))
+            if book.id in map(lambda rented_book: rented_book.book_id, books_rented):
                 raise BookAlreadyRentedException()
 
         return True
@@ -85,10 +88,11 @@ class Library:
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
-                rented_books = filter(lambda rented_book: rented_book.book_id != book_id, rented_books)
-                # fixme czy mozna prosciej?? ^^
+                rented_books = list(filter(lambda rented_book: rented_book.book_id != book_id, rented_books))
                 if not rented_books:
                     self.rented_books.pop(user_id)
+                else:
+                    self.rented_books[user_id] = rented_books
                 return
         raise BookIsNotRentedException()
 
@@ -100,7 +104,7 @@ class Library:
         for user in args:
             self.add_user(user)
 
-    def print_title_by_gen(self, genre:str):
+    def print_title_by_gen(self, genre: str):
         count_title = 0
         for title, books in self.books.items():
             if genre in map(lambda book: book.genre, books):
@@ -109,7 +113,7 @@ class Library:
         if count_title == 0:
             raise GenreDoesNotExist()
 
-    def print_gen_by_autor(self, autor:str):
+    def print_gen_by_autor(self, autor: str):
         books = self.books.values()
         books = reduce(list.__add__, books)
         books = filter(lambda book: book.author == autor, books)
@@ -119,8 +123,6 @@ class Library:
             print(genres)
         else:
             raise GenreDoesNotExist()
-
-
 
 
 library = Library()
@@ -158,3 +160,14 @@ try:
 except GenreDoesNotExist:
     print("Gatunek nie wystepuje")
 # library.print_title_by_gen("Akcja")
+
+
+library.return_book(book_one.id)
+
+library.rent_book(book_one, 0)
+# print(library.rented_books)
+library.rent_book(book_two, 0)
+# print(library.rented_books)
+
+library.return_book(book_one.id)
+library.return_book(book_two.id)
