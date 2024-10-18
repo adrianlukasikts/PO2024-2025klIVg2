@@ -1,7 +1,7 @@
 from functools import reduce
 
 from book import Book
-from library.rented_book import RentedBook
+from rented_book import RentedBook
 from user import User
 
 
