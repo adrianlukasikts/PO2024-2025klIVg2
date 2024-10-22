@@ -1,3 +1,4 @@
+from datetime import date
 from functools import reduce
 
 from book import Book
@@ -100,12 +101,12 @@ class Library:
         except UserDoesNotExistException:
             print("User not exists")
 
-    def return_book(self, book_id: int):
+    def return_book(self, book_id: int, return_date: date = date.today()):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
                 rented_one_book: RentedBook = \
-                list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))[0]
-                rent_history = RentHistory(user_id, rented_one_book.rental_date)
+                    list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))[0]
+                rent_history = RentHistory(user_id, rented_one_book.rental_date, return_date)
                 fee = rent_history.get_fee()
                 if fee > 0:
                     if self.users_fee.get(user_id):
@@ -211,6 +212,8 @@ library.rent_book(book_two, 0)
 print(library.rented_books)
 
 library.return_book(book_one.id)
-library.return_book(book_two.id)
+library.return_book(book_two.id, date(2024, 11, 25))
+
 
 print(library.rented_history.get(0)[0].get_fee())
+print(library.users_fee)
