@@ -40,6 +40,7 @@ class Library:
         self.rented_books: dict[int, list[RentedBook]] = {}
         self.users: list[User] = []
         self.rented_history: dict[int, list[RentHistory]] = {}
+        self.users_fee: dict[int, int] = {}
 
     def add_book(self, book: Book):
         if not self.books.get(book.title):
@@ -91,10 +92,17 @@ class Library:
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
                 rented_one_book: RentedBook = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))[0]
+                rent_history = RentHistory(user_id, rented_one_book.rental_date)
+                fee = rent_history.get_fee()
+                if fee > 0:
+                    if self.users_fee.get(user_id):
+                        self.users_fee[user_id] += fee
+                    else:
+                        self.users_fee[user_id] = fee
                 if self.rented_history.get(book_id):
-                    self.rented_history[book_id].append(RentHistory(user_id, rented_one_book.rental_date))
+                    self.rented_history[book_id].append(rent_history)
                 else:
-                    self.rented_history[book_id] = [RentHistory(user_id, rented_one_book.rental_date)]
+                    self.rented_history[book_id] = [rent_history]
                 rented_books = list(filter(lambda rented_book: rented_book.book_id != book_id, rented_books))
                 if not rented_books:
                     self.rented_books.pop(user_id)
@@ -178,3 +186,5 @@ print(library.rented_books)
 
 library.return_book(book_one.id)
 library.return_book(book_two.id)
+
+print(library.rented_history.get(0)[0].get_fee())

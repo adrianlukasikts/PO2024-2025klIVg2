@@ -7,4 +7,8 @@ class RentHistory:
         self.rental_date = rental_date
         self.return_date = date.today()
 
+    def get_fee(self):
+        difference = (self.return_date - self.rental_date).days
+        return max(0, difference - 30)
+
 
