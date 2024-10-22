@@ -34,6 +34,18 @@ class GenreDoesNotExist(Exception):
     pass
 
 
+class NoFeeToPayException(Exception):
+    pass
+
+
+class PaymentHasToMoreThanZeroException(Exception):
+    pass
+
+
+class TooMuchMoneyException(Exception):
+    pass
+
+
 class Library:
     def __init__(self):
         self.books: dict[str, list[Book]] = {}
@@ -91,7 +103,8 @@ class Library:
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
-                rented_one_book: RentedBook = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))[0]
+                rented_one_book: RentedBook = \
+                list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))[0]
                 rent_history = RentHistory(user_id, rented_one_book.rental_date)
                 fee = rent_history.get_fee()
                 if fee > 0:
@@ -110,6 +123,19 @@ class Library:
                     self.rented_books[user_id] = rented_books
                 return
         raise BookIsNotRentedException()
+
+    def pay_fee(self, user_id: int, payment: int):
+        if user_id not in map(lambda user: user.id, self.users):
+            raise UserDoesNotExistException()
+        if not self.users_fee.get(user_id):
+            raise NoFeeToPayException()
+        if payment <= 0:
+            raise PaymentHasToMoreThanZeroException()
+        if payment > self.users_fee[user_id]:
+            raise TooMuchMoneyException()
+        self.users_fee[user_id] -= payment
+        if self.users_fee[user_id] == 0:
+            self.users_fee.pop(user_id)
 
     def add_books(self, *args: Book):
         for book in args:
