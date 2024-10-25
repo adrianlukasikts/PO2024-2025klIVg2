@@ -165,6 +165,14 @@ class Library:
             print(genres)
         else:
             raise GenreDoesNotExist()
+    def get_book(self, book_id: int) -> Book:
+        books = reduce(list.__add__,self.books.values())
+        filtered_books = list(filter(lambda book: book.id == book_id, books))
+        if not filtered_books:
+            raise BookDoesNotExistException()
+        else:
+            return filtered_books[0]
+
 
 
 library = Library()
@@ -217,3 +225,51 @@ library.return_book(book_two.id, date(2024, 11, 25))
 
 print(library.rented_history.get(0)[0].get_fee())
 print(library.users_fee)
+
+while True:
+    print("1. Dodaj użytkownika")
+    print("2. Dodaj ksiązke")
+    print("3. Wyświetl wypożyczone książki użytkownika")
+    print("4. Wypożycz książkę")
+    print("5. Zwróć książkę")
+    print("6. Wyświetl zadłużenie użytkownika")
+    print("7. Pay up time aka spłacanie długów")
+    print("@ Exit")
+
+    option = input("Podaj numer akcji: ")
+    match option:
+        case "1":
+            name = input("Podaj imię:")
+            surname = input("Podaj nazwisko:")
+            library.add_user(User(name, surname))
+        case "2":
+            book_name = input("Podaj nazwe ksiązki:")
+            book_author = input("Podaj autora książki:")
+            year_of_book = int(input("Podaj rok wydania książki:"))
+            book_category = input("Podaj kategorię książki:")
+            library.add_book(Book(book_name, book_author, year_of_book, book_category))
+        case "3":
+            user_id = int(input("Podaj indetyfikator użytkownika:"))
+            rented_books_by_user = library.rented_books.get(user_id)
+            if not rented_books_by_user:
+                print([])
+            else:
+                print(list(map(lambda rented_book: rented_book.book_id, rented_books_by_user)))
+        case "4":
+            book_id = int(input("Podaj ID książki: "))
+            user_id = int(input("Podaj ID użytkownika: "))
+            library.rent_book(library.get_book(book_id), user_id)
+        case "5":
+            book_id = int(input("Podaj ID Ksiazki"))
+            library.return_book(book_id)
+        case "6":
+            user_id = int(input("podaj id uzytkownika"))
+            fee = library.users_fee.get(user_id)
+            if fee: print(fee)
+            else: print('0')
+        case "7":
+            pass
+        case "@":
+            break
+        case _:
+            print("ni poprawne data &")
