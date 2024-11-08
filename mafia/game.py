@@ -1,3 +1,5 @@
+from random import randint
+
 from mafia.citizen import Citizen
 from mafia.doctor import Doctor
 from mafia.mafioso import Mafioso
@@ -36,14 +38,33 @@ class Game:
         while game_not_finished():
             round_counter += 1
 
-            nominated = list(filter(lambda player: player.status.value, self.players))
-            random.shuffle(nominated)
-            nominated = nominated[0:3]
+            alive_players = list(filter(lambda player: player.status.value, self.players))
+            random.shuffle(alive_players)
+            nominated = alive_players[0:3]
+            nominated = map(lambda player: player.nickname, nominated)
+            votes = {nominated[0]: 0, nominated[1]: 0, nominated[2]: 0}
+            for player in alive_players:
+                player.add_vote(votes)
+            max_votes = 0
+            is_unique = True
+            max_votes_nickname = ""
+            for nickname, num_votes in votes.items():
+                if num_votes > max_votes:
+                    max_votes = num_votes
+                    max_votes_nickname = nickname
+                    is_unique = True
+                if num_votes == max_votes:
+                    is_unique = False
+            if is_unique:
+                killed_player = list(filter(lambda player: max_votes_nickname == player.nickname, self.players))[0]
+                killed_player.status = Status.DEAD
+            else:
+                print("Nobody was executed")
+            doctor = list(filter(lambda player: isinstance(player, Doctor), self.players))[0]
+            alive_players = list(filter(lambda player: player.status.value, self.players))
+            doctor.protect_player(alive_players[randint(0, len(alive_players))])
+            # TODO
 
-            for player in self.players:
-                pass
-
-            input()
 
 
 game = Game(["p1", "p2", "p3", "p4", "p5", "p6"])
