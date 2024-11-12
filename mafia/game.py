@@ -1,10 +1,10 @@
 from random import randint
 
-from mafia.citizen import Citizen
-from mafia.doctor import Doctor, WasProtected
-from mafia.mafioso import Mafioso
-from mafia.police import Police
-from mafia.status import Status
+from citizen import Citizen
+from doctor import Doctor, WasProtected
+from mafioso import Mafioso
+from police import Police
+from status import Status
 from player import Player
 import random
 
