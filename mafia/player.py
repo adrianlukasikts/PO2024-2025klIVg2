@@ -13,3 +13,6 @@ class Player:
     @abstractmethod
     def add_vote(self, votes: dict[str, int]):
         pass
+
+    def is_alive(self):
+        return self.status.value

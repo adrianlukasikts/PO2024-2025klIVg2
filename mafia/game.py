@@ -1,7 +1,7 @@
 from random import randint
 
 from mafia.citizen import Citizen
-from mafia.doctor import Doctor
+from mafia.doctor import Doctor, WasProtected
 from mafia.mafioso import Mafioso
 from mafia.police import Police
 from mafia.status import Status
@@ -38,10 +38,10 @@ class Game:
         while game_not_finished():
             round_counter += 1
 
-            alive_players = list(filter(lambda player: player.status.value, self.players))
+            alive_players = self.get_alive_players()
             random.shuffle(alive_players)
             nominated = alive_players[0:3]
-            nominated = map(lambda player: player.nickname, nominated)
+            nominated = list(map(lambda player: player.nickname, nominated))
             votes = {nominated[0]: 0, nominated[1]: 0, nominated[2]: 0}
             for player in alive_players:
                 player.add_vote(votes)
@@ -60,11 +60,41 @@ class Game:
                 killed_player.status = Status.DEAD
             else:
                 print("Nobody was executed")
-            doctor = list(filter(lambda player: isinstance(player, Doctor), self.players))[0]
-            alive_players = list(filter(lambda player: player.status.value, self.players))
-            doctor.protect_player(alive_players[randint(0, len(alive_players))])
-            # TODO
+            doctor = self.get_doctor()
+            if doctor:
+                alive_players = self.get_alive_players()
+                index_random_player = randint(0, len(alive_players) - 1)
+                try:
+                    doctor.protect_player(alive_players[index_random_player])
+                except WasProtected:
+                    alive_players.pop(index_random_player)
+                    doctor.protect_player(alive_players[randint(0, len(alive_players) - 1)])
 
+            citizen_players = list(filter(lambda player: not isinstance(player, Mafioso), alive_players))
+
+            to_be_executed: Citizen = random.choice(citizen_players)
+            doc: Doctor = self.get_doctor()
+            if to_be_executed.nickname == doc.last_protected:
+                print("nobody died")
+            else:
+                to_be_executed.status = Status.DEAD
+                print(f"Player: {to_be_executed.nickname} died.")
+
+            # TODO
+            input()
+
+    def get_doctor(self) -> Doctor:
+        doc: Doctor = list(filter(lambda player: isinstance(player, Doctor), self.players))[0]
+        return doc if doc.is_alive() else None
+
+    def get_mafiosos(self) -> list[Mafioso]:
+        return list(filter(lambda player: isinstance(player, Mafioso), self.players))
+
+    def get_alive_citizens(self) -> list[Citizen]:
+        return list(filter(lambda player: isinstance(player, Citizen) and player.is_alive(), self.players))
+
+    def get_alive_players(self) -> list[Player]:
+        return list(filter(lambda player: player.is_alive(), self.players))
 
 
 game = Game(["p1", "p2", "p3", "p4", "p5", "p6"])
