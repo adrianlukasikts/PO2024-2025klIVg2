@@ -31,6 +31,12 @@ class Game:
         def game_not_finished():
             return 0 < self.mafiosos_num < self.citizens_num
 
+        def nominated_players(alive_players: list[Player]) -> dict[str, int]:
+            random.shuffle(alive_players)
+            nominated = alive_players[0:3]
+            nominated = list(map(lambda player: player.nickname, nominated))
+            return {nominated[0]: 0, nominated[1]: 0, nominated[2]: 0}
+
         def print_info(round_count: int):
             return f"Round: {round_count}\n Number of citizens: {self.citizens_num}\n Number of mafiosos: {self.mafiosos_num}\n Doctor - {self.players[1].status.name.lower()}\n Policeman - {self.players[0].status.name.lower()}"
 
@@ -39,10 +45,7 @@ class Game:
             round_counter += 1
 
             alive_players = self.get_alive_players()
-            random.shuffle(alive_players)
-            nominated = alive_players[0:3]
-            nominated = list(map(lambda player: player.nickname, nominated))
-            votes = {nominated[0]: 0, nominated[1]: 0, nominated[2]: 0}
+            votes = nominated_players(alive_players)
             for player in alive_players:
                 player.add_vote(votes)
             max_votes = 0
