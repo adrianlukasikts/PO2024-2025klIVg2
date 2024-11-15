@@ -1,4 +1,6 @@
 from random import randint
+from typing import TypeVar
+
 from citizen import Citizen
 from doctor import Doctor, WasProtected
 from mafioso import Mafioso
@@ -7,6 +9,7 @@ from status import Status
 from player import Player
 import random
 
+T = TypeVar('T')
 
 class Game:
     def __init__(self, logins: list[str]):
@@ -66,6 +69,7 @@ class Game:
             else:
                 print("Nobody was executed")
 
+
         def doctor_phase() -> str:
             doctor = self.get_doctor()
             if doctor:
@@ -124,6 +128,9 @@ class Game:
 
     def get_alive_players(self) -> list[Player]:
         return list(filter(lambda player: player.is_alive(), self.players))
+
+    def get_fraction(self, class_name: type[T]) -> list[T]:
+        return list(filter(lambda player: isinstance(player, class_name)))
 
 
 game = Game(["p1", "p2", "p3", "p4", "p5", "p6"])
