@@ -1,5 +1,4 @@
 from random import randint
-
 from citizen import Citizen
 from doctor import Doctor, WasProtected
 from mafioso import Mafioso
@@ -66,12 +65,13 @@ class Game:
             doctor = self.get_doctor()
             if doctor:
                 alive_players = self.get_alive_players()
-                index_random_player = randint(0, len(alive_players) - 1)
+                random_player = random.choice(alive_players)
                 try:
-                    doctor.protect_player(alive_players[index_random_player])
+                    doctor.protect_player(random_player)
                 except WasProtected:
-                    alive_players.pop(index_random_player)
-                    doctor.protect_player(alive_players[randint(0, len(alive_players) - 1)])
+                    alive_players.remove(random_player)
+                    random_player = random.choice(alive_players)
+                    doctor.protect_player(random_player)
 
             citizen_players = list(filter(lambda player: not isinstance(player, Mafioso), alive_players))
 
