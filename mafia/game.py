@@ -39,10 +39,7 @@ class Game:
         def print_info(round_count: int):
             return f"Round: {round_count}\n Number of citizens: {self.citizens_num}\n Number of mafiosos: {self.mafiosos_num}\n Doctor - {self.players[1].status.name.lower()}\n Policeman - {self.players[0].status.name.lower()}"
 
-        round_counter = 0
-        while game_not_finished():
-            round_counter += 1
-
+        def player_vote_phase() -> None:
             alive_players = self.get_alive_players()
             votes = nominated_players(alive_players)
             for player in alive_players:
@@ -55,36 +52,65 @@ class Game:
                     max_votes = num_votes
                     max_votes_nickname = nickname
                     is_unique = True
-                if num_votes == max_votes:
+                elif num_votes == max_votes:
                     is_unique = False
+            print(votes, is_unique)
             if is_unique:
                 killed_player = list(filter(lambda player: max_votes_nickname == player.nickname, self.players))[0]
                 killed_player.status = Status.DEAD
+                print(f"{killed_player.nickname} has been banished.")
+                if isinstance(killed_player, Mafioso):
+                    self.mafiosos_num -= 1
+                else:
+                    self.citizens_num -= 1
             else:
                 print("Nobody was executed")
+
+        def doctor_phase() -> str:
             doctor = self.get_doctor()
             if doctor:
                 alive_players = self.get_alive_players()
                 random_player = random.choice(alive_players)
                 try:
                     doctor.protect_player(random_player)
+                    return random_player.nickname
                 except WasProtected:
                     alive_players.remove(random_player)
                     random_player = random.choice(alive_players)
                     doctor.protect_player(random_player)
+                    return random_player.nickname
 
-            citizen_players = list(filter(lambda player: not isinstance(player, Mafioso), alive_players))
+        def mafia_phase(protected_player_nick: str):
+            citizen_players = list(filter(lambda player: not isinstance(player, Mafioso), self.get_alive_players()))
 
             to_be_executed: Citizen = random.choice(citizen_players)
-            doc: Doctor = self.get_doctor()
-            if to_be_executed.nickname == doc.last_protected:
+            if to_be_executed.nickname == protected_player_nick:
                 print("nobody died")
             else:
                 to_be_executed.status = Status.DEAD
+                self.citizens_num -= 1
                 print(f"Player: {to_be_executed.nickname} died.")
 
-            # TODO
+        round_counter = 0
+        while game_not_finished():
+            round_counter += 1
+
+            player_vote_phase()
+
+            if self.mafiosos_num == 0:
+                break
+
+            protected_player_nick = doctor_phase()
+
+            mafia_phase(protected_player_nick)
+
+            print(f"Mafiosos: {list(filter(lambda mafioso: mafioso.status.value, self.get_mafiosos()))}")
             input()
+
+        if self.mafiosos_num == 0:
+            print("Citizens won!")
+        else:
+            print("Mafiosos won!")
 
     def get_doctor(self) -> Doctor:
         doc: Doctor = list(filter(lambda player: isinstance(player, Doctor), self.players))[0]
