@@ -1,22 +1,21 @@
-def print_number_of_word(file_name: str, chosen_word: str):
-    with open(file_name) as file:
-        words = file.read().split()
-        print(len(list(filter(lambda word: word.__contains__(chosen_word), words))))
+import matplotlib.pyplot as plt
+import matplotlib
+from file import get_dict_words
+from file import get_filtered_words
+
+fig, ax = plt.subplots()
+
+fig = matplotlib.pyplot.gcf()
 
 
-# print_number_of_word("test1.txt", "Lorem")
+dictionary = get_filtered_words("test1.txt")
+words = list(map(lambda pair: pair[0], dictionary))
+counts = list(map(lambda pair: pair[1], dictionary))
 
-def get_dict_words(file_name: str) -> dict[str, int]:
-    with open(file_name) as file:
-        words: list[str] = file.read().split()
-        result: dict[str, int] = {}
-        for word in words:
-            word = word.upper().split(",")[0]
-            word = word.split(".")[0]
-            if result.get(word):
-                result[word] += 1
-            else:
-                result[word] = 1
-        return result
 
-print(get_dict_words("test1.txt"))
+ax.bar(words, counts)
+ax.set_ylabel("Number of words")
+ax.set_xlabel("Words")
+
+fig.set_size_inches(18.5, 10.5)
+fig.savefig('diagram.png')
