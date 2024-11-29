@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib
-from file import get_dict_words
 from file import get_filtered_words
 
 fig, ax = plt.subplots()
