@@ -1,29 +1,29 @@
 from queue import PriorityQueue
-from sys import maxsize
 
-capitals = {1: "Warszawa", 2: "Berlin", 3: "Sophia", 4: "Paris", 5: "Cadis", 0: "Londyn"}
-
-graph = [[(5, 10), (2, 7)],
-         [(2, 2), (3, 3), (4, 4)],
-         [(1, 2), (0, 7), (4, 6)],
-         [(1, 3), (4, 5), (5, 8)],
-         [(2, 6), (1, 4), (3, 5), (5, 9)],
-         [(4, 9), (3, 8), (0, 10)]]
+graph = {
+    "Londyn": [(10, "Cadis"), (7, "Berlin")],
+    "Warszawa": [(2, "Berlin"), (3, "Sophia"), (4, "Paris")],
+    "Berlin": [(2, "Warszawa"), (7, "Londyn"), (6, "Paris")],
+    "Sophia": [(3, "Warszawa"), (5, "Paris"), (8, "Cadis")],
+    "Paris": [(6, "Berlin"), (4, "Warszawa"), (5, "Sophia"), (9, "Cadis")],
+    "Cadis": [(9, "Paris"), (8, "Sophia"), (10, "Londyn")],
+}
 
 queue = PriorityQueue()
-dist = [maxsize] * 6
-dist[0] = 0
-visited = [False] * 6
-queue.put((0, 0, 0))
+dist = {city: float("inf") for city in graph.keys()}
+dist["Londyn"] = 0
+visited = {city: False for city in graph.keys()}
+queue.put((0, "Londyn"))
 while not queue.empty():
-    distance, start_city, end_city = queue.get()
-    if not visited[start_city]:
-        visited[start_city] = True
-        for c, d in graph[start_city]:
-            queue.put((d, end_city, c))
-        if dist[end_city] > dist[start_city] + distance:
-            dist[end_city] = dist[start_city] + distance
-#TODO bledny wynik
-print(dist[1])
+    distance, city = queue.get()
+    if not visited[city]:
+        visited[city] = True
+
+        for d, c in graph[city]:
+            dist[city] = min(dist[city], dist[c] + d)
+            queue.put((d, c))
 
 
+
+
+print(dist)
