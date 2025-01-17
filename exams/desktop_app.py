@@ -1,6 +1,5 @@
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QLabel, QGridLayout
 import random
 
 class Die:
@@ -20,13 +19,13 @@ class DiceGame(QWidget):
         super().__init__()
         self.dice: list[Die] = [Die(DiceGame.INITIAL_VALUE_DIE) for _ in range(DiceGame.NUM_DICE)]
         self.labels = [QLabel(self) for _ in range(DiceGame.NUM_DICE)]
-        self.layout = QHBoxLayout()
+        self.layout = QGridLayout()
         self.interface()
 
     def rollDice(self):
         self.dice = [Die(rand_die()) for _ in range(DiceGame.NUM_DICE)]
         self.add_dice_label()
-        print(list(map(lambda die: die.value, self.dice)))
+        #print(list(map(lambda die: die.value, self.dice)))
 
     def interface(self):
         self.resize(100, 100)
@@ -35,7 +34,7 @@ class DiceGame(QWidget):
         roll_dice.setFixedSize(200, 100)
         roll_dice.clicked.connect(self.rollDice)
 
-        self.layout.addWidget(roll_dice)
+        self.layout.addWidget(roll_dice, 0, 5)
         self.add_dice_label()
         self.setLayout(self.layout)
 
@@ -44,7 +43,7 @@ class DiceGame(QWidget):
     def add_dice_label(self):
         for i in range(len(self.dice)):
             self.labels[i].setPixmap(self.dice[i].pixmap)
-            self.layout.addWidget(self.labels[i])
+            self.layout.addWidget(self.labels[i], 1, i)
 
 
     def calculate_points(self, dices: list[int]) -> int:
