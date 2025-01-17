@@ -7,6 +7,7 @@ class Die:
     def __init__(self, value: int):
         self.value = value
         self.pixmap = QPixmap(f"inf04czerwiec/{value}.png")
+        self.pixmap = self.pixmap.scaled(100, 100)
 
 def rand_die() -> int:
     return random.randint(1, 6)
@@ -24,20 +25,17 @@ class DiceGame(QWidget):
 
     def rollDice(self):
         self.dice = [Die(rand_die()) for _ in range(DiceGame.NUM_DICE)]
+        self.add_dice_label()
         print(list(map(lambda die: die.value, self.dice)))
 
     def interface(self):
-        self.resize(800, 600)
+        self.resize(100, 100)
         self.setWindowTitle("Gra w kości")
         roll_dice = QPushButton("&RollDice", self)
         roll_dice.setFixedSize(200, 100)
         roll_dice.clicked.connect(self.rollDice)
 
         self.layout.addWidget(roll_dice)
-        self.layout.setAlignment(Qt.AlignCenter)
-        # dice_label1 = QLabel(self)
-        # dice_label1.setPixmap(self.dice[0].pixmap)
-        # layout.addWidget(dice_label1)
         self.add_dice_label()
         self.setLayout(self.layout)
 
