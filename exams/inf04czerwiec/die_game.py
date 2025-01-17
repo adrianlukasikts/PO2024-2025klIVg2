@@ -1,6 +1,10 @@
 import random
 
 
+def rand_dice() -> int:
+    return random.randint(1, 6)
+
+
 def calculate_points(dices: list[int]) -> int:
     dices.sort()
     counter = 1
@@ -25,7 +29,7 @@ while not 3 <= dice_number <= 10:
 
 is_again = "t"
 while is_again == "t":
-    dices = [random.randint(1, 6) for _ in range(dice_number)]
+    dices = [rand_dice() for _ in range(dice_number)]
     for i in range(len(dices)):
         print(f"Kostka {i + 1}: {dices[i]}")
     print(f"Liczba uzyskanych punktów {calculate_points(dices)}")
